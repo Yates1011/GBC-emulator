@@ -17,13 +17,13 @@ public:
     void write(std::uint16_t address, std::uint8_t value);
 
 private:
-    std::array<std::uint8_t, ROM_BANK_SIZE> bank0_{}; // From cartridge, usually a fixed bank
-    std::array<std::uint8_t, ROM_BANK_SIZE>
-        bank1_{}; // From cartridge, switchable bank via mapper (if any)
+    std::array<std::uint8_t, ROM_BANK_SIZE> bank0_{};    // From cartridge, usually a fixed bank
+    std::array<std::uint8_t, ROM_BANK_SIZE> bank1_{};    // From cartridge, switchable bank via mapper (if any)
     std::array<std::uint8_t, VRAM_SIZE> vram_{};         // In CGB mode, swtichable bank/01
     std::array<std::uint8_t, VRAM_SIZE> external_ram_{}; // From cartridge, switchable bank if any
     std::array<std::uint8_t, WRAM_SIZE> work_ram0_{};    // In CGB mode, swtichable bank 1-7
     std::array<std::uint8_t, WRAM_SIZE> work_ram1_{};    // In CGB mode, swtichable bank 1-7
+    // TODO finish memory mapping 
 };
 
 enum class MemoryRegion
