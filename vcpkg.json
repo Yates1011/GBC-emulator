@@ -1,0 +1,9 @@
+{
+    "name": "gbcemu",
+    "version": "0.1.0",
+    "builtin-baseline": "0ac8df3b98e3afcd8bf075fa74a6bd2c32613345",
+    "dependencies": [
+        "sdl2",
+        "catch2"
+    ]
+}

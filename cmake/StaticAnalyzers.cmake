@@ -1,0 +1,10 @@
+option(GBCEMU_ENABLE_CLANG_TIDY "Run clang-tidy as part of the build" OFF)
+
+if(GBCEMU_ENABLE_CLANG_TIDY)
+    find_program(GBCEMU_CLANG_TIDY_EXE NAMES clang-tidy)
+    if(GBCEMU_CLANG_TIDY_EXE)
+        set(CMAKE_CXX_CLANG_TIDY ${GBCEMU_CLANG_TIDY_EXE})
+    else()
+        message(WARNING "GBCEMU_ENABLE_CLANG_TIDY is ON but no clang-tidy executable was found.")
+    endif()
+endif()

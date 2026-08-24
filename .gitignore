@@ -1,0 +1,18 @@
+# Build output
+build/
+out/
+
+# vcpkg
+vcpkg_installed/
+/vcpkg/
+
+# Tooling
+.cache/
+compile_commands.json
+
+# Editors
+.vscode/
+.idea/
+
+# OS
+.DS_Store

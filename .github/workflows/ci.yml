@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  # Kept in sync with the "builtin-baseline" in vcpkg.json; bump both together.
+  VCPKG_COMMIT: "0ac8df3b98e3afcd8bf075fa74a6bd2c32613345"
+
+jobs:
+  lint:
+    name: format + tidy lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install clang tools
+        run: sudo apt-get update && sudo apt-get install -y clang-format clang-tidy
+
+      - name: Check formatting
+        run: |
+          find src tests -name '*.cpp' -o -name '*.hpp' | xargs clang-format --dry-run --Werror
+
+      - uses: lukka/get-cmake@latest
+      - uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: ${{ env.VCPKG_COMMIT }}
+
+      - name: Configure (tidy preset)
+        run: cmake --preset tidy
+
+      - name: Build with clang-tidy
+        run: cmake --build --preset tidy
+
+  build:
+    name: build + test (${{ matrix.os }}, ${{ matrix.compiler }})
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            compiler: gcc-14
+            cc: gcc-14
+            cxx: g++-14
+            preset: debug
+            experimental: false
+          - os: ubuntu-latest
+            compiler: clang-18
+            cc: clang-18
+            cxx: clang++-18
+            preset: asan
+            experimental: false
+          - os: windows-latest
+            compiler: msvc
+            preset: debug
+            experimental: false
+          - os: macos-latest
+            compiler: apple-clang
+            preset: debug
+            experimental: false
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install compiler (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ${{ matrix.cc }} ${{ matrix.cxx }}
+          echo "CC=${{ matrix.cc }}" >> "$GITHUB_ENV"
+          echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
+
+      - uses: lukka/get-cmake@latest
+      - uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: ${{ env.VCPKG_COMMIT }}
+
+      - name: Configure
+        run: cmake --preset ${{ matrix.preset }}
+
+      - name: Build
+        run: cmake --build --preset ${{ matrix.preset }}
+
+      - name: Test
+        run: ctest --preset ${{ matrix.preset }}
