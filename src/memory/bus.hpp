@@ -10,36 +10,37 @@ inline constexpr std::size_t ROM_BANK_SIZE = 0x4000; // 16 KiB
 namespace gbcemu
 {
 
-    class Bus
-    {
-        public:
-            [[nodiscard]] std::uint8_t read(std::uint16_t address) const;
-            void write(std::uint16_t address, std::uint8_t value);
+class Bus
+{
+public:
+    [[nodiscard]] std::uint8_t read(std::uint16_t address) const;
+    void write(std::uint16_t address, std::uint8_t value);
 
-        private:
-            std::array<std::uint8_t, ROM_BANK_SIZE> bank0_{};    // From cartridge, usually a fixed bank
-            std::array<std::uint8_t, ROM_BANK_SIZE> bank1_{};    // From cartridge, switchable bank via mapper (if any)
-            std::array<std::uint8_t, VRAM_SIZE> vram_{};         // In CGB mode, swtichable bank/01
-            std::array<std::uint8_t, VRAM_SIZE> external_ram_{}; // From cartridge, switchable bank if any
-            std::array<std::uint8_t, WRAM_SIZE> work_ram0_{};    // In CGB mode, swtichable bank 1-7
-            std::array<std::uint8_t, WRAM_SIZE> work_ram1_{};    // In CGB mode, swtichable bank 1-7
-            // TODO finish memory mapping 
-    };
+private:
+    std::array<std::uint8_t, ROM_BANK_SIZE> bank0_{}; // From cartridge, usually a fixed bank
+    std::array<std::uint8_t, ROM_BANK_SIZE>
+        bank1_{}; // From cartridge, switchable bank via mapper (if any)
+    std::array<std::uint8_t, VRAM_SIZE> vram_{};         // In CGB mode, swtichable bank/01
+    std::array<std::uint8_t, VRAM_SIZE> external_ram_{}; // From cartridge, switchable bank if any
+    std::array<std::uint8_t, WRAM_SIZE> work_ram0_{};    // In CGB mode, swtichable bank 1-7
+    std::array<std::uint8_t, WRAM_SIZE> work_ram1_{};    // In CGB mode, swtichable bank 1-7
+                                                         // TODO finish memory mapping
+};
 
-    enum class MemoryRegion
-    {
-        RomBank00,
-        RomBankNN,
-        Vram,
-        ExternalRam,
-        WramBank0,
-        WramBankNN,
-        EchoRam,
-        Oam,
-        Unusable,
-        IoRegisters,
-        Hram,
-        InterruptEnable
-    };
+enum class MemoryRegion
+{
+    RomBank00,
+    RomBankNN,
+    Vram,
+    ExternalRam,
+    WramBank0,
+    WramBankNN,
+    EchoRam,
+    Oam,
+    Unusable,
+    IoRegisters,
+    Hram,
+    InterruptEnable
+};
 
 } // namespace gbcemu

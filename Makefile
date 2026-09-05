@@ -33,8 +33,9 @@ asan:
 	ctest --preset asan
 
 tidy:
-	CC=clang CXX=clang++ cmake --preset tidy
-	CC=clang CXX=clang++ cmake --build --preset tidy
+	# CC=clang CXX=clang++ cmake --preset tidy
+	# CC=clang CXX=clang++ cmake --build --preset tidy
+	clang-tidy -p build/tidy $(SOURCES)
 
 format:
 	clang-format -i $(SOURCES)
