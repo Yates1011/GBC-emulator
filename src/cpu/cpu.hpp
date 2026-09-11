@@ -52,6 +52,9 @@ namespace gbcemu
             void step(); 
 
             uint8_t fetch_byte();
+
+            // TODO: need a rest command that sets pc to 0x100
+            //https://gbdev.io/pandocs/The_Cartridge_Header.html
             
 
         private:

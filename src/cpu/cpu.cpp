@@ -1,4 +1,5 @@
 #include "cpu/cpu.hpp"
+#include "memory/bus.hpp"
 
 namespace gbcemu
 {
